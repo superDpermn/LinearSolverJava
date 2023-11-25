@@ -28,11 +28,6 @@ public class Fraction implements Comparable<Fraction>{
         return num;
     }
 
-    public void expandBy(int numb){
-        num*=numb;
-        denom*=numb;
-    }
-
     public boolean simplify(){
     	if(num==0) {
     		denom=1;
@@ -54,15 +49,6 @@ public class Fraction implements Comparable<Fraction>{
         
     }
 
-    public boolean normalize(int denomKey){
-        if(denomKey==denom){
-            denom = 1;
-            return true;
-        }
-        else
-            return false;
-    }
-
     public Fraction multiplied(Fraction other){
         return new Fraction(num*other.getNum(), denom*other.getDenom());
     }
@@ -71,10 +57,6 @@ public class Fraction implements Comparable<Fraction>{
         num = num*other.getDenom() + other.getNum()*denom;
         denom *= other.getDenom();
         this.simplify();
-    }
-    
-    public void divide(int val) {
-    	denom*=val;
     }
 
     public String toString(){

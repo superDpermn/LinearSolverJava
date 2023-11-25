@@ -85,34 +85,6 @@ class Matrix{
         System.out.println("\n");
     }
     
-    public int[] rowDetect() throws AllZeroException {
-    	int[] ret = new int[dataArr.length];
-    	for(int i = 0; i < dataArr.length; i++) {
-    		boolean isEmptyRow = true;
-    		for(int j = 0; j < dataArr[i].length; j++) {
-    			if(dataArr[i][j].getNum()!=0) {
-    				ret[i] = j;
-    				isEmptyRow = false;
-    				break;
-    			}
-    		}
-    		if(isEmptyRow) {
-    			ret[i] = -1; //this makes a mark to indicate that the current row is all zeros which should not be possible given valid inputs.
-    			throw new AllZeroException("Found an all zero row. Row index: "+String.valueOf(i));
-    		}
-    	}
-    	return ret;
-    }
-    
-    public int[] pivotIndexes(){
-    	int[] ret = new int[dataArr.length];
-    	Fraction upperBound = new Fraction(Integer.MAX_VALUE);
-    	for(int i = 0; i < dataArr.length; i++) {
-    		ret[i] = MathFunctions.maxIndex(dataArr[i],upperBound);
-    	}
-    	return ret;
-    }
-    
 }
 
 class AllZeroException extends Exception{
