@@ -3,7 +3,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-        //Scanner scnr = new Scanner(System.in);
         
         LinearMatrix m1 = new LinearMatrix(
         		new Fraction[][] {
@@ -18,17 +17,26 @@ public class Main {
 		        }
 		);
         
-        //scnr.close();
-        Fraction[] solution = m1.Solve();
-        
-        int varIndex = 1;
-        for(Fraction f:solution) {
-        	System.out.print("x" + String.valueOf(varIndex++) + ": ");
-        	System.out.println(f.toString());
-        }
-        
+        Fraction[] solution;
+		try {
+			solution = m1.Solve(); //this could result in an exception, not necessarily a computing error, just a mathematical contradiction like 1==0.
+			
+			System.out.println();
+			printResults(solution);
+			
+		} catch (AllZeroException e) {
+			e.printStackTrace();
+		}
+
     }
 
+    public static void printResults(Fraction[] solution) {
+    	int varIndex = 1;
+        for(int t = 0; t < solution.length; t++){
+        	System.out.print("x" + String.valueOf(varIndex++) + ": ");
+        	System.out.println(solution[t].toString());
+        }
+    }
 
     public static Matrix getInput(Scanner scnr){
         System.out.println("is your matrix all integers?");
@@ -105,7 +113,11 @@ public class Main {
 
     
     public static int GCD(int a,int b){
-    	if(a==0||b==0) {return 1;}
+    	if(a==0 || b==0) {return 1;}
+    	if(a < 0 || b < 0) {
+    		a = Math.abs(a);
+    		b = Math.abs(b);
+    	}
         int temp1 = Math.min(a, b);
         int temp2 = Math.max(a, b);
         while(temp1 != temp2){
@@ -121,7 +133,7 @@ public class Main {
     
     public static Fraction rowCoeff(Fraction A,Fraction B) { //returns row coefficient for Fraction A to cancel Fraction B. method: {A*(result) == -B} => {A*(result)+B == 0}
     	//multiply the entire row of A with the result and add the whole row to row B to get rid of the first nonzero Fraction of row B (leaving row A unchanged in the end).
-    	return new Fraction(-1*A.getDenom()*B.getNum(),A.getNum()*B.getDenom());
+    	return new Fraction(-B.getNum(),B.getDenom());
     }
     
 }

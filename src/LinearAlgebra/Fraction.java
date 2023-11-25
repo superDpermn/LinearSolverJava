@@ -38,6 +38,10 @@ public class Fraction implements Comparable<Fraction>{
     		denom=1;
     		return true;
     	}
+    	if(denom<0 && num<0) {
+			denom = -denom;
+			num = -num;
+    	}
         int gcd = Main.GCD(num, denom);
         if(gcd>1){
             num/=gcd;
@@ -66,6 +70,7 @@ public class Fraction implements Comparable<Fraction>{
     public void add(Fraction other){
         num = num*other.getDenom() + other.getNum()*denom;
         denom *= other.getDenom();
+        this.simplify();
     }
     
     public void divide(int val) {
@@ -103,5 +108,14 @@ public class Fraction implements Comparable<Fraction>{
 	public void mult(Fraction other) {
 		num = num*other.getNum();
 		denom = denom*other.getDenom();
+		this.simplify();
+	}
+
+	public boolean isZero() {
+		return num==0;
+	}
+	
+	public boolean isOne() {
+		return num==denom;
 	}
 }
