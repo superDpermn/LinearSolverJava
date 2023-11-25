@@ -1,16 +1,16 @@
 package LinearAlgebra;
 
-public class Fraction implements Comparable<Fraction>{
+public class Fraction implements Comparable<Fraction>{ //the Fraction class uses integer fractions to represent rational numbers. Can be negative as well!
     public static final Fraction ZERO = new Fraction(0,1);
 
     private int num,denom;
 
-    public Fraction(int val1,int val2){
+    public Fraction(int val1,int val2){ //val1 is numerator, and val2 is denominator for this data type.
         num = val1;
         denom = val2;
     }
 
-    public Fraction(){
+    public Fraction(){ //defaults to zero
         num = 0;
         denom = 1;
     }
@@ -54,15 +54,6 @@ public class Fraction implements Comparable<Fraction>{
         
     }
 
-    public boolean normalize(int denomKey){
-        if(denomKey==denom){
-            denom = 1;
-            return true;
-        }
-        else
-            return false;
-    }
-
     public Fraction multiplied(Fraction other){
         return new Fraction(num*other.getNum(), denom*other.getDenom());
     }
@@ -71,10 +62,6 @@ public class Fraction implements Comparable<Fraction>{
         num = num*other.getDenom() + other.getNum()*denom;
         denom *= other.getDenom();
         this.simplify();
-    }
-    
-    public void divide(int val) {
-    	denom*=val;
     }
 
     public String toString(){
@@ -117,5 +104,13 @@ public class Fraction implements Comparable<Fraction>{
 	
 	public boolean isOne() {
 		return num==denom;
+	}
+
+	public Fraction inverse() {
+		return new Fraction(denom,num);
+	}
+
+	public Fraction negative() {
+		return new Fraction(-num,denom);
 	}
 }

@@ -1,58 +1,8 @@
 package LinearAlgebra;
 
+import java.util.*;
+
 public final class MathFunctions{
-	public static int maxIndex(int[] arr) {
-		int max = 0;
-		int maxVal = 0;
-		for(int i = 0; i < arr.length; i++) {
-			int currentVal = Math.abs(arr[i]);
-			if(currentVal > maxVal) {
-				maxVal = currentVal;
-				max = i;
-			}
-		}
-		return max;
-	}
-	
-	//{1,3,5,2}
-	public static int maxIndex(int[] arr,int alreadyFound) {
-		int max = 0;
-		int maxVal = 0;
-		for(int i = 0; i < arr.length; i++) {
-			int currentVal = Math.abs(arr[i]);
-			if(currentVal > maxVal && currentVal < arr[alreadyFound]) {
-				maxVal = currentVal;
-				max = i;
-			}
-			else {
-				System.out.println(arr[alreadyFound]);
-			}
-		}
-		return max;
-	}
-	public static int maxIndex(Fraction[] arr) {
-		Fraction maxVal = new Fraction(0,1);
-		int max = 0;
-		for(int i = 0; i < arr.length; i++) {
-			if(maxVal.compareTo(arr[i]) < 0) {
-				max = i;
-				maxVal = arr[i];
-			}
-		}
-		return max;
-	}
-	public static int maxIndex(Fraction[] arr,Fraction upperBound) {
-		Fraction maxVal = new Fraction(0,1);
-		int max = 0;
-		for(int i = 0; i < arr.length; i++) {
-			if(maxVal.compareTo(arr[i]) < 0 && maxVal.compareTo(upperBound) > 0) {
-				max = i;
-				maxVal = arr[i];
-			}
-		}
-		return max;
-	}
-	
 	public static boolean includes(int[] arr,int data) {
 		for(int t:arr) {
 			if(data==t) {
@@ -63,4 +13,35 @@ public final class MathFunctions{
 	}
 	
 	
+
+	//this method is made by ChatGPT.
+	public static <T> T[] RemovePairs(T[] objects, int[] indexes) {
+	        Map<T, Integer> objectIndexMap = new HashMap<>();
+	        List<T> modifiedList = new ArrayList<>();
+
+	        for (int i = 0; i < indexes.length; i += 2) {
+	            int index1 = indexes[i];
+	            int index2 = indexes[i + 1];
+
+	            // Check if the objects at the specified indexes are equivalent
+	            if (objects[index1].equals(objects[index2])) {
+	                T object = objects[index1];
+	                
+	                // Add the object to the result if not already present
+	                if (!objectIndexMap.containsKey(object)) {
+	                    modifiedList.add(object);
+	                    objectIndexMap.put(object, index1);
+	                }
+	            } else {
+	                // If objects are not equivalent, add both to the result
+	                modifiedList.add(objects[index1]);
+	                modifiedList.add(objects[index2]);
+	            }
+	        }
+
+	        // Convert the list to an array
+	        T[] modifiedArray = (T[]) modifiedList.toArray();
+	        //noinspection unchecked
+	        return modifiedArray;
+	}
 }

@@ -1,6 +1,6 @@
 package LinearAlgebra;
 
-class Matrix{
+class Matrix{ //The Matrix class is the parent of class LinearMatrix. It contains some basic matrix manipulation and access methods.
     protected Fraction[][] dataArr;
     public Matrix(Fraction[][] frArr){
         dataArr = frArr;
@@ -85,34 +85,6 @@ class Matrix{
         System.out.println("\n");
     }
     
-    public int[] rowDetect() throws AllZeroException {
-    	int[] ret = new int[dataArr.length];
-    	for(int i = 0; i < dataArr.length; i++) {
-    		boolean isEmptyRow = true;
-    		for(int j = 0; j < dataArr[i].length; j++) {
-    			if(dataArr[i][j].getNum()!=0) {
-    				ret[i] = j;
-    				isEmptyRow = false;
-    				break;
-    			}
-    		}
-    		if(isEmptyRow) {
-    			ret[i] = -1; //this makes a mark to indicate that the current row is all zeros which should not be possible given valid inputs.
-    			throw new AllZeroException("Found an all zero row. Row index: "+String.valueOf(i));
-    		}
-    	}
-    	return ret;
-    }
-    
-    public int[] pivotIndexes(){
-    	int[] ret = new int[dataArr.length];
-    	Fraction upperBound = new Fraction(Integer.MAX_VALUE);
-    	for(int i = 0; i < dataArr.length; i++) {
-    		ret[i] = MathFunctions.maxIndex(dataArr[i],upperBound);
-    	}
-    	return ret;
-    }
-    
 }
 
 class AllZeroException extends Exception{
@@ -121,4 +93,13 @@ class AllZeroException extends Exception{
 	public AllZeroException(String msg) {
 		super(msg);
 	}
+}
+
+class UnsolvableMatrixException extends Exception{
+	private static final long serialVersionUID = -2223101842114431072L;
+	
+	public UnsolvableMatrixException(String msg) {
+		super(msg);
+	}
+	
 }

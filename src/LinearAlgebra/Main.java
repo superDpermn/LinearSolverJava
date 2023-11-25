@@ -4,27 +4,22 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args){
         
-        LinearMatrix m1 = new LinearMatrix(
-        		new Fraction[][] {
-		        	{new Fraction(1),new Fraction(0),new Fraction(2)},
-		        	{new Fraction(0),new Fraction(1),new Fraction(5)},
-		        	{new Fraction(4),new Fraction(3),new Fraction(-2)}
-		        },
-		        new Fraction[] {
-		        		new Fraction(4),
-		        		new Fraction(8),
-		        		new Fraction(-3)
-		        }
-		);
+    	Scanner scnr = new Scanner(System.in);
+    	
+        LinearMatrix m1 = getLinearInput(scnr);
         
-        Fraction[] solution;
+        scnr.close();
+        
 		try {
-			solution = m1.Solve(); //this could result in an exception, not necessarily a computing error, just a mathematical contradiction like 1==0.
+			Fraction[] solution = m1.Solve(); //this could result in an exception, not necessarily a computing error, just a mathematical contradiction like 1==0.
 			
 			System.out.println();
 			printResults(solution);
 			
 		} catch (AllZeroException e) {
+			e.printStackTrace();
+		}
+		catch (UnsolvableMatrixException e) {
 			e.printStackTrace();
 		}
 
@@ -72,11 +67,11 @@ public class Main {
     }
     
     public static LinearMatrix getLinearInput(Scanner scnr) {
-    	System.out.println("is your matrix all integers?");
+    	System.out.println("is your matrix all integers? (enter a boolean value)");
         boolean allIntegers = scnr.nextBoolean();
-        System.out.println("how many rows does your matrix have?");
+        System.out.println("how many rows does your matrix have? (enter an int value)");
         int rowCount = scnr.nextInt();
-        System.out.println("how many columns does your matrix have?");
+        System.out.println("how many columns does your matrix have? (enter an int value)");
         int colCount = scnr.nextInt();
         Fraction[][] retArr = new Fraction[rowCount][colCount];
         if(allIntegers){
