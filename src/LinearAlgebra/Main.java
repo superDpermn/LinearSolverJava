@@ -18,7 +18,7 @@ public class Main {
         
         Fraction[] solution;
 		try {
-			solution = m1.Solve(); //this could result in an exception, not necessarily a computing error, just a mathematical contradiction like 1==0.
+			solution = m1.Solve(); //this could result in an exception.
 			printResults(solution);
 			
 		} catch (AllZeroException e) {
@@ -138,7 +138,7 @@ public class Main {
     				String[] currentRow = inputArr[i].split(" ");
     				String[][] temp = new String[colCount][2];
     				for(int j = 0; j < colCount; j++) {
-    					temp[i] = currentRow[colCount].split("/");
+    					temp[j] = currentRow[j].split("/");
     				}
     				elementArr[i] = temp;
     			}
@@ -151,11 +151,14 @@ public class Main {
     				retArr[parseRow] = FRrow;
     			}
     			
+    			System.out.println();
+    			
     			for(int row = 0; row < rowCount; row++) {
-    				System.out.println("Enter nominator for row constant #"+(row+1));
-    				int temp = scnr.nextInt();
-    				System.out.println("Enter denominator for row constant #"+(row+1));
-    				augmentArr[row] = new Fraction(temp,scnr.nextInt());
+    				System.out.println("Enter row constant for row #"+(row+1));
+    				String[] s = scnr.nextLine().split("/");
+    				int tempNum = Integer.valueOf(s[0]);
+    				int tempDenom = Integer.valueOf(s[1]);
+    				augmentArr[row] = new Fraction(tempNum,tempDenom);
     			}
     			
     			
