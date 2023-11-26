@@ -16,23 +16,39 @@ public class LinearMatrix extends Matrix {
 		for(int i = 0; i < rowCount; i++) {
 			rowArr[i] = new MatrixRow(dataArr[i],constants[i]);
 		}
+		
+		//give priority to rows with most zeros as they are the least flexible for placement.
+		
+		//Initializing sorting setup
 		MatrixRow[] sortedRowArr = new MatrixRow[rowCount];
 		int[] pivots = new int[rowCount];
 		for(int index = 0; index < rowCount; index++) {
 			pivots[index] = -1;
 		}
 		
+		//determining the priority of each row for sorting, to avoid getting stuck and throwing an exception.
+		int[] priorityData = new int[rowCount]; //this array holds the priority score for each unsorted row
+		for(int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+			Fraction[] currentRowEntries = rowArr[rowIndex].getEntries();
+			int sum = 0;
+			for(int colIndex = 0; colIndex < colCount; colIndex++) {
+				sum += currentRowEntries[colIndex].isZero()?Math.pow(2,colIndex):0; //incrementing sum by a (rather complex) formula, determining the current row's "priority score" PERFECTLY
+			}
+			priorityData[rowIndex] = sum;
+		}
+		
+		int[] INDEXES = MathFunctions.getSortedIndexes(priorityData);
+		
 		for(int i = 0; i < rowCount; i++) {
 			for(int j = 0; j < colCount; j++) {
-				if(MathFunctions.includes(pivots, j)||rowArr[i].getEntry(j).isZero()) {
-					continue;
-				}
-				else {
-					pivots[i]=j; //data for sorting
+				int current = INDEXES[i];
+				if(!MathFunctions.includes(pivots, current)) {
+					pivots[i]=current; //data for sorting
 					break;
 				}
 			}
 		}
+		
 		for(int x = 0; x < rowCount; x++) {
 			sortedRowArr[x] = rowArr[pivots[x]];
 		}//placing elements in sorted array
@@ -89,6 +105,15 @@ public class LinearMatrix extends Matrix {
 			answer[i] = sortedRowArr[i].getRHS();
 		}
 		
+		Fraction[] unsortedAnswer = new Fraction[sortedRowArr.length];
+		for(int i = 0; i < sortedRowArr.length; i++) {
+			unsortedAnswer[pivots[i]] = answer[i];
+		}
+		
+		System.out.println("\nPrinting answers in the initial order: ");
+		Main.printResults(unsortedAnswer);
+		
+		System.out.println("\nReturning sorted answers as shown in first array: ");
 		return answer;
 	}
 }
@@ -99,6 +124,15 @@ class MatrixRow{
 	public MatrixRow(Fraction[] input,Fraction augment) {
 		entries = input;
 		RHS = augment;
+	}
+	public int getZeros() {
+		int zeroCount = 0;
+		for(int t = 0; t < entries.length; t++) {
+			if(entries[t].isZero()) {
+				zeroCount++;
+			}
+		}
+		return zeroCount;
 	}
 	public static MatrixRow deepCopy(MatrixRow matrixRow) {
 		Fraction[] in = matrixRow.entries;
@@ -159,9 +193,9 @@ class MatrixRow{
 		s += " | ";
 		int temp1 = RHS.toString().length();
 		int temp3 = temp1 / 2;
-		s += " ".repeat(Math.max(0, 4 - temp3));
+		s += " ".repeat(Math.max(0, 6 - temp3));
 		s += RHS.toString();
-		s += " ".repeat(Math.max(4 - (temp3+(temp1%2)),0));
+		s += " ".repeat(Math.max(6 - (temp3+(temp1%2)),0));
 		s += "]";
 		
 		return s;

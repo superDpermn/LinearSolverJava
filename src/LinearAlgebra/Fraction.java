@@ -33,7 +33,7 @@ public class Fraction implements Comparable<Fraction>{
     		denom=1;
     		return true;
     	}
-    	if(denom<0 && num<0) {
+    	if(denom<0) {
 			denom = -denom;
 			num = -num;
     	}

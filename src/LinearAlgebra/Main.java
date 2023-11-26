@@ -2,8 +2,8 @@ package LinearAlgebra;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args){
-        
+    public static void main(String[] args){    	
+    	
     	Scanner scnr = new Scanner(System.in);
     	
         LinearMatrix m1 = getLinearInput(scnr);
@@ -13,8 +13,6 @@ public class Main {
         Fraction[] solution;
 		try {
 			solution = m1.Solve(); //this could result in an exception, not necessarily a computing error, just a mathematical contradiction like 1==0.
-			
-			System.out.println();
 			printResults(solution);
 			
 		} catch (AllZeroException e) {
@@ -97,8 +95,15 @@ public class Main {
         Fraction[] augmentArr = new Fraction[rowCount];
         for(int i = 0; i < rowCount; i++) {
         	System.out.println("enter augment for row "+String.valueOf(i));
-        	int temp = scnr.nextInt();
-        	augmentArr[i] = new Fraction(temp);
+        	if(allIntegers) {
+        		int temp = scnr.nextInt();
+        		augmentArr[i] = new Fraction(temp);
+        	}else {
+        		int temp = scnr.nextInt();
+        		int temp2 = scnr.nextInt();
+        		augmentArr[i] = new Fraction(temp,temp2);
+        	}
+        	
         }
     	
     	return new LinearMatrix(retArr,augmentArr);
