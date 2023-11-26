@@ -41,8 +41,8 @@ public class LinearMatrix extends Matrix {
 		
 		for(int i = 0; i < rowCount; i++) {
 			for(int j = 0; j < colCount; j++) {
-				int current = INDEXES[i];
-				if(!MathFunctions.includes(pivots, current)) {
+				int current = INDEXES[j];
+				if(!MathFunctions.includes(pivots, current) && !rowArr[current].getEntry(i).isZero()) {
 					pivots[i]=current; //data for sorting
 					break;
 				}
@@ -113,7 +113,7 @@ public class LinearMatrix extends Matrix {
 		System.out.println("\nPrinting answers in the initial order: ");
 		Main.printResults(unsortedAnswer);
 		
-		System.out.println("\nReturning sorted answers as shown in first array: ");
+		System.out.println("\nReturning sorted answers as shown in first matrix: ");
 		return answer;
 	}
 }

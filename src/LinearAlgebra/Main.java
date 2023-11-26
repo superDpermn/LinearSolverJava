@@ -6,7 +6,13 @@ public class Main {
     	
     	Scanner scnr = new Scanner(System.in);
     	
-        LinearMatrix m1 = getLinearInput(scnr);
+    	System.out.println("Does your matrix consist only of integers? (true,false) : ");
+    	boolean intInput = scnr.nextBoolean();
+    	
+    	System.out.println("Do you want to input the entire row for each row? (true,false) (quicker, but experimental) : ");
+    	boolean rowInput = scnr.nextBoolean();
+    	
+        LinearMatrix m1 = getLinearInput(scnr,intInput,rowInput);
         
         scnr.close();
         
@@ -36,6 +42,7 @@ public class Main {
         int rowCount = scnr.nextInt();
         System.out.println("how many columns does your matrix have?");
         int colCount = scnr.nextInt();
+        
         Fraction[][] retArr = new Fraction[rowCount][colCount];
         if(allIntegers){
             for(int i = 0; i < rowCount; i++){
@@ -63,50 +70,146 @@ public class Main {
     }
     
     public static LinearMatrix getLinearInput(Scanner scnr) {
-    	System.out.println("is your matrix all integers?");
-        boolean allIntegers = scnr.nextBoolean();
-        System.out.println("how many rows does your matrix have?");
+    	return getLinearInput(scnr,true,false);
+    }
+    
+    public static LinearMatrix getLinearInput(Scanner scnr,InputMode mode) {
+    	boolean IntMode = false;
+    	boolean RowMode = false;
+    	switch(mode) {
+    	case IntRow:
+    		IntMode = true;
+    		RowMode = true;
+    		break;
+    	case Int:
+    		IntMode = true;
+    		break;
+    	case Row:
+    		RowMode = true;
+    		break;
+    	default:
+    		IntMode = false;
+    		RowMode = false;
+    	}
+
+    	return getLinearInput(scnr,IntMode,RowMode);
+    }
+    
+    public static LinearMatrix getLinearInput(Scanner scnr,boolean allIntegers,boolean rowInput) {
+        System.out.println("How many rows does your matrix have?");
         int rowCount = scnr.nextInt();
-        System.out.println("how many columns does your matrix have?");
+        System.out.println("How many columns does your matrix have?");
         int colCount = scnr.nextInt();
+        
         Fraction[][] retArr = new Fraction[rowCount][colCount];
-        if(allIntegers){
-            for(int i = 0; i < rowCount; i++){
-                for(int j = 0; j < colCount; j++){
-                    System.out.print("enter data: ");
-                    int temp = scnr.nextInt();
-                    retArr[i][j] = new Fraction(temp);
-                }
-                System.out.println();
-            }
-        }
-        else{
-            for(int i = 0; i < rowCount; i++){
-                for(int j = 0; j < colCount; j++){
-                    System.out.print("enter nominator: ");
-                    int tempNom = scnr.nextInt();
-                    System.out.print("enter denominator: ");
-                    int tempDenom = scnr.nextInt();
-                    retArr[i][j] = new Fraction(tempNom,tempDenom);
-                }
-                System.out.println();
-            }
-        }
-        Fraction[] augmentArr = new Fraction[rowCount];
-        for(int i = 0; i < rowCount; i++) {
-        	System.out.println("enter augment for row "+String.valueOf(i));
-        	if(allIntegers) {
-        		int temp = scnr.nextInt();
-        		augmentArr[i] = new Fraction(temp);
-        	}else {
-        		int temp = scnr.nextInt();
-        		int temp2 = scnr.nextInt();
-        		augmentArr[i] = new Fraction(temp,temp2);
-        	}
+        Fraction[] augmentArr = new Fraction[colCount];
+        
+        if(rowInput) {
+        	System.out.println("For each row, enter the row from the regular matrix: \n");
+        	String[] inputArr = new String[colCount];
+        	scnr.nextLine();
+    		for(int rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+    			System.out.println("Enter row #"+(rowIndex+1));
+    			inputArr[rowIndex] = scnr.nextLine();
+    		}
+    		if(allIntegers) {
+    			String[][] elementArr = new String[rowCount][colCount];
+    			for(int i = 0; i < rowCount; i++) {
+    				elementArr[i] = inputArr[i].split(" ");
+    			}
+    			for(int parseRow = 0; parseRow < rowCount; parseRow++) {
+    				Fraction[] temp = new Fraction[colCount];
+    				for(int parseCol = 0; parseCol < colCount; parseCol++) {
+    					temp[parseCol] = new Fraction(Integer.valueOf(elementArr[parseRow][parseCol]));
+    				}
+    				retArr[parseRow] = temp;
+    			}
+    			
+    			System.out.println();
+    			
+    			for(int row = 0; row < rowCount; row++) {
+    				System.out.println("Enter constant (Right Hand Side) for row #"+(row+1));
+    				augmentArr[row] = new Fraction(scnr.nextInt());
+    			}
+    			
+    		}else {
+    			String[][][] elementArr = new String[rowCount][colCount][2];
+    			for(int i = 0; i < rowCount; i++) {
+    				String[] currentRow = inputArr[i].split(" ");
+    				String[][] temp = new String[colCount][2];
+    				for(int j = 0; j < colCount; j++) {
+    					temp[i] = currentRow[colCount].split("/");
+    				}
+    				elementArr[i] = temp;
+    			}
+    			
+    			for(int parseRow = 0; parseRow < rowCount; parseRow++) {
+    				Fraction[] FRrow = new Fraction[colCount];
+    				for(int parseCol = 0; parseCol < colCount; parseCol++) {
+    					FRrow[parseCol] = new Fraction(Integer.valueOf(elementArr[parseRow][parseCol][0]),Integer.valueOf(elementArr[parseRow][parseCol][1]));
+    				}
+    				retArr[parseRow] = FRrow;
+    			}
+    			
+    			for(int row = 0; row < rowCount; row++) {
+    				System.out.println("Enter nominator for row constant #"+(row+1));
+    				int temp = scnr.nextInt();
+    				System.out.println("Enter denominator for row constant #"+(row+1));
+    				augmentArr[row] = new Fraction(temp,scnr.nextInt());
+    			}
+    			
+    			
+    		}
         	
         }
+        else {
+        	if(allIntegers){
+                for(int i = 0; i < rowCount; i++){
+                    for(int j = 0; j < colCount; j++){
+                        System.out.print("enter data: ");
+                        int temp = scnr.nextInt();
+                        retArr[i][j] = new Fraction(temp);
+                    }
+                    System.out.println();
+                }
+            }
+            else{
+                for(int i = 0; i < rowCount; i++){
+                    for(int j = 0; j < colCount; j++){
+                        System.out.print("enter nominator: ");
+                        int tempNom = scnr.nextInt();
+                        System.out.print("enter denominator: ");
+                        int tempDenom = scnr.nextInt();
+                        retArr[i][j] = new Fraction(tempNom,tempDenom);
+                    }
+                    System.out.println();
+                }
+            }
+            augmentArr = new Fraction[rowCount];
+            for(int i = 0; i < rowCount; i++) {
+            	System.out.println("enter augment for row "+String.valueOf(i));
+            	if(allIntegers) {
+            		int temp = scnr.nextInt();
+            		augmentArr[i] = new Fraction(temp);
+            	}else {
+            		int temp = scnr.nextInt();
+            		int temp2 = scnr.nextInt();
+            		augmentArr[i] = new Fraction(temp,temp2);
+            	}
+            	
+            }
+        }
+        System.out.println();
+        
     	
     	return new LinearMatrix(retArr,augmentArr);
+    }
+    
+    enum InputMode{
+    	IntRow,
+    	Int,
+    	Row,
+    	None
     }
 
     
